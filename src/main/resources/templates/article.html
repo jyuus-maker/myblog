@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="|${article.title} ??THE JOURNAL|">Article ??THE JOURNAL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/article.css}">
+    <!-- Lightweight Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+<!-- Masthead -->
+<header class="masthead">
+    <div class="masthead-inner">
+        <a th:href="@{/articles}" class="masthead-brand">
+            <span class="brand-title">THE JOURNAL</span>
+            <span class="brand-issue">VOL. 01</span>
+        </a>
+
+        <nav class="masthead-nav">
+            <a th:href="@{/articles}" class="nav-link">??ARCHIVE INDEX</a>
+            <span id="guest-nav">
+                <a th:href="@{/login}" class="nav-link">SIGN IN</a>
+            </span>
+            <span id="user-nav" style="display: none;">
+                <button type="button" id="logout-btn" class="nav-link">LOGOUT</button>
+            </span>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Article Reader View -->
+<main class="reading-container">
+    <article>
+        <input type="hidden" id="article-id" th:value="${article.id}">
+
+        <header class="article-header">
+            <div class="article-badge-bar">
+                <span class="article-badge-num" th:text="|ISSUE #${article.id}|">ISSUE #1</span>
+                <div>
+                    <span th:text="|READS ${article.views}|" style="margin-right: 0.75rem; color: var(--accent-red); font-weight: 500;">READS 0</span>
+                    <span id="reading-time-badge">EST. 1 MIN READ</span>
+                </div>
+            </div>
+
+            <h1 class="article-detail-title" th:text="${article.title}">The Title of Editorial Piece</h1>
+
+            <div class="article-detail-meta">
+                <span th:text="|PUBLISHED ${#temporals.format(article.createdAt, 'yyyy.MM.dd HH:mm')}|">PUBLISHED 2026.10.01</span>
+                <span>??/span>
+                <span>ORIGINAL TEXT</span>
+            </div>
+        </header>
+
+        <!-- Formatted Markdown Editorial Body -->
+        <section class="article-content" id="article-body-text" th:text="${article.content}">
+            Content paragraph goes here.
+        </section>
+
+        <!-- Actions Bar -->
+        <footer class="article-actions-bar">
+            <div>
+                <a th:href="@{/articles}" class="link-back">??RETURN TO INDEX</a>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <button type="button" id="modify-btn"
+                        th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
+                        class="btn-editorial">EDIT</button>
+                <button type="button" id="delete-btn"
+                        class="btn-editorial danger">DELETE</button>
+            </div>
+        </footer>
+    </article>
+</main>
+
+<!-- Footer -->
+<footer class="editorial-footer">
+    <div class="editorial-footer-inner">
+        <span>© 2026 THE JOURNAL. ALL RIGHTS RESERVED.</span>
+        <span>TYPESET IN NOTO SERIF KR</span>
+    </div>
+</footer>
+
+<!-- Toast & Modal Components -->
+<div id="editorial-toast"></div>
+
+<div id="editorial-modal" class="editorial-modal-overlay">
+    <div class="editorial-modal-box">
+        <div class="modal-header-meta" id="modal-meta">CONFIRMATION</div>
+        <div class="modal-message" id="modal-message">Are you sure?</div>
+        <div class="modal-actions">
+            <button type="button" class="btn-editorial" id="modal-cancel-btn">CANCEL</button>
+            <button type="button" class="btn-editorial primary" id="modal-confirm-btn">CONFIRM</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/common/modal.js}"></script>
+<script th:src="@{/js/common/api.js}"></script>
+<script th:src="@{/js/article/feed.js}"></script>
+</body>
+</html>

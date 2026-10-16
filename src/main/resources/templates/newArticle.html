@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE JOURNAL ??Writing Desk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/article.css}">
+    <!-- Markdown Parser for Real-time Ingest & Preview -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+<!-- Masthead -->
+<header class="masthead">
+    <div class="masthead-inner">
+        <a th:href="@{/articles}" class="masthead-brand">
+            <span class="brand-title">THE JOURNAL</span>
+            <span class="brand-issue">AUTHORING DESK</span>
+        </a>
+
+        <nav class="masthead-nav">
+            <a th:href="@{/articles}" class="nav-link">??EXIT DESK</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Writing Desk Container -->
+<main class="reading-container desk-main-container">
+    
+    <!-- Desk Header & Mode Toggle -->
+    <div class="desk-header">
+        <div>
+            <h1 class="desk-title" th:text="${article.id} != null ? 'Edit Publication' : 'New Publication'">New Publication</h1>
+            <div class="desk-meta" th:text="${article.id} != null ? |REVISING ISSUE #${article.id}| : 'DRAFT ENTRY'">DRAFT ENTRY</div>
+        </div>
+
+        <!-- Editor View Switcher (2???§ÌîåÎ¶?vs ?®Ïùº ?ÑÏ??? -->
+        <div class="desk-mode-switch-box" id="desk-mode-switch-box">
+            <span class="mode-label">EDITOR VIEW:</span>
+            <div class="view-toggle-group">
+                <button type="button" id="btn-mode-split" class="view-toggle-btn active">?ì∞ ?†Î¨∏ ?∏Ïßë??Î™®Îìú (2???§ÌîåÎ¶?</button>
+                <button type="button" id="btn-mode-visual" class="view-toggle-btn">?çÔ∏è ?ÑÏ???Î™®Îìú (?®Ïùº Ï∫îÎ≤Ñ??</button>
+            </div>
+        </div>
+    </div>
+
+    <form class="desk-form" onsubmit="return false;">
+        <input type="hidden" id="article-id" th:value="${article.id}">
+        <!-- Hidden Image File Input -->
+        <input type="file" id="image-file-input" accept="image/*" style="display: none;">
+        <!-- Hidden Raw Content Container for initial load -->
+        <textarea id="raw-content-source" style="display: none;" th:text="${article.content}"></textarea>
+        <textarea id="content" style="display: none"></textarea>
+
+        <div>
+            <input type="text"
+                   id="title"
+                   class="input-editorial-title"
+                   placeholder="?§Îìú?ºÏù∏(?úÎ™©)???ÖÎ†•?òÏÑ∏??.."
+                   th:value="${article.title}"
+                   autocomplete="off">
+            <div class="field-error-msg" id="title-error">?§Îìú?ºÏù∏(?úÎ™©)???ÖÎ†•?¥Ï£º?∏Ïöî.</div>
+        </div>
+
+        <!-- Editorial Format Toolbar -->
+        <div class="editorial-toolbar" id="writing-toolbar">
+            <!-- [Í∑∏Î£π 1: ?êÎîî?†Î¶¨???úÏãù ?ÑÍµ¨] -->
+            <button type="button" class="toolbar-btn" data-action="h2" title="?åÏ†úÎ™?(H2)">H2</button>
+            <button type="button" class="toolbar-btn" data-action="h3" title="?òÏúÑ?úÎ™© (H3)">H3</button>
+            <div class="toolbar-divider"></div>
+            <button type="button" class="toolbar-btn" data-action="bold" title="ÍµµÍ≤å (Bold)"><b>B</b></button>
+            <button type="button" class="toolbar-btn" data-action="italic" title="Í∏∞Ïö∏??(Italic)"><i>I</i></button>
+            <div class="toolbar-divider"></div>
+            <button type="button" class="toolbar-btn" data-action="quote" title="?∏Ïö©Íµ?(Blockquote)">????/button>
+            <button type="button" class="toolbar-btn" data-action="hr" title="?àÏ∑®??Íµ¨Î∂Ñ??(HR)">??/button>
+            <button type="button" class="toolbar-btn" data-action="list" title="Î∂àÎ¶ø Î™©Î°ù">??List</button>
+            <button type="button" class="toolbar-btn" id="btn-toolbar-source" data-action="source-view" title="HTML ÏΩîÎìúÎ≥¥Í∏∞ (?®Ïùº Ï∫îÎ≤Ñ??">&lt;/&gt;</button>
+            
+            <div class="toolbar-divider"></div>
+            
+            <!-- [Í∑∏Î£π 2: ?ÑÌè¨??/ ?πÏàò Î∏îÎ°ù ?ΩÏûÖ ?ÑÍµ¨] -->
+            <button type="button" class="toolbar-btn primary" id="upload-image-btn" title="?¥Î?ÏßÄ ?ÖÎ°ú??(ÏµúÎ? 1200px ?êÎèô ÏµúÏ†Å??">?ñº IMAGE</button>
+            <button type="button" class="toolbar-btn primary" data-action="code-insert" title="ÏΩîÎìú Î∏îÎ°ù ?ΩÏûÖ">?íª ÏΩîÎìú?ΩÏûÖ</button>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- WORKSPACE 1: ?†Î¨∏ ?∏Ïßë??Î™®Îìú (2???Ä???§ÏãúÍ∞??§ÌîåÎ¶?Î∑?- Í∏∞Î≥∏ Î™®Îìú)        -->
+        <!-- ================================================================ -->
+        <div id="desk-split-workspace" class="desk-split-workspace active">
+            <div class="desk-pane">
+                <div class="pane-header">INPUT DRAFT (MARKDOWN)</div>
+                <textarea id="split-markdown-input"
+                          class="pane-textarea"
+                          placeholder="Í∏∞ÏÇ¨ Î≥∏Î¨∏ ÎßàÌÅ¨?§Ïö¥???ÖÎ†•?òÏÑ∏?? ?¥Î∞îÎ•??ÑÎ•¥Í±∞ÎÇò ?¥Î?ÏßÄÎ•??úÎûòÍ∑??úÎ°≠/Î∂ôÏó¨?£Í∏∞(Ctrl+V)?òÎ©¥ ?§Î•∏Ï™ΩÏóê???§ÏãúÍ∞ÑÏúºÎ°??∏ÏáÑ Ï°∞Ìåê?©Îãà??.."></textarea>
+            </div>
+
+            <div class="desk-pane">
+                <div class="pane-header">REAL-TIME PUBLICATION PREVIEW</div>
+                <div id="split-live-preview" class="preview-pane article-content">
+                    <p><em>*?§Î•∏Ï™ΩÏóê Î≥∏Î¨∏ Î∞?Ï≤®Î????¥Î?ÏßÄÍ∞Ä ?§ÏãúÍ∞??†Î¨∏ Ï°∞Ìåê?ºÎ°ú ?åÎçîÎßÅÎê©?àÎã§.*</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- WORKSPACE 2: ?ÑÏ???Î™®Îìú (?®Ïùº ÎπÑÏ£º???∏Ìîå?àÏù¥??Ï∫îÎ≤Ñ??                   -->
+        <!-- ================================================================ -->
+        <div id="desk-visual-workspace" class="desk-visual-workspace" style="display: none;">
+            <div class="pane-header">VISUAL CANVAS (IN-PLACE EDITING)</div>
+            <div id="editor-canvas"
+                 class="input-editorial-canvas article-content"
+                 contenteditable="true"
+                 data-placeholder="Î≥∏Î¨∏?êÏÑú ÏßÅÏ†ë ?úÏãùÍ≥??¥Î?ÏßÄÎ•?Î≥¥Î©∞ ?∏Ïßë?òÏÑ∏??.."></div>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- WORKSPACE 3: </> ÏΩîÎìúÎ≥¥Í∏∞ (?®Ïùº Ï∫îÎ≤Ñ???ÑÏ≤¥??HTML ?åÏä§ÏΩîÎìú ?úÏãú)       -->
+        <!-- ================================================================ -->
+        <div id="desk-code-workspace" class="desk-code-workspace" style="display: none;">
+            <div class="pane-header" id="code-pane-header">HTML SOURCE CODE VIEW (SINGLE CANVAS)</div>
+            <textarea id="editor-html-source"
+                      class="pane-textarea source-code-textarea"
+                      placeholder="?ÑÏ≤¥ Î≥∏Î¨∏??HTML ?åÏä§ ÏΩîÎìúÎ•??ïÏù∏ Î∞??∏Ïßë?òÏÑ∏??.."></textarea>
+        </div>
+
+        <div class="field-error-msg" id="content-error" style="margin-top: 0.5rem;">Í∏∞ÏÇ¨ Î≥∏Î¨∏???ÖÎ†•?¥Ï£º?∏Ïöî.</div>
+
+        <div class="desk-footer">
+            <div class="char-counter" id="char-counter">0 WORDS / 0 CHARACTERS</div>
+            
+            <div style="display: flex; gap: 0.75rem;">
+                <button type="button" class="btn-editorial" th:onclick="|location.href='@{/articles}'|">DISCARD</button>
+                <button th:if="${article.id} != null" type="button" id="modify-btn" class="btn-editorial primary">SAVE CHANGES</button>
+                <button th:if="${article.id} == null" type="button" id="create-btn" class="btn-editorial primary">PUBLISH PIECE</button>
+            </div>
+        </div>
+    </form>
+</main>
+
+<!-- Footer -->
+<footer class="editorial-footer">
+    <div class="editorial-footer-inner">
+        <span>¬© 2026 THE JOURNAL. EDITORIAL DESK.</span>
+        <span>TYPESET IN NOTO SERIF KR</span>
+    </div>
+</footer>
+
+<!-- Toast & Modal Components -->
+<div id="editorial-toast"></div>
+
+<div id="editorial-modal" class="editorial-modal-overlay">
+    <div class="editorial-modal-box">
+        <div class="modal-header-meta" id="modal-meta">NOTICE</div>
+        <div class="modal-message" id="modal-message">Confirmation required</div>
+        <div class="modal-actions">
+            <button type="button" class="btn-editorial" id="modal-cancel-btn">CANCEL</button>
+            <button type="button" class="btn-editorial primary" id="modal-confirm-btn">CONTINUE</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/common/modal.js}"></script>
+<script th:src="@{/js/common/api.js}"></script>
+<script th:src="@{/js/article/imageUploader.js}"></script>
+<script th:src="@{/js/article/editor.js}"></script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE JOURNAL ??Edition Index</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/article.css}">
+</head>
+<body class="broadsheet-mode">
+
+<!-- Standard Web Masthead (?†Î¨∏ Î™®Îìú???åÎäî ?®Í≤®Ïß? -->
+<header class="masthead">
+    <div class="masthead-inner">
+        <a th:href="@{/articles}" class="masthead-brand">
+            <span class="brand-title">THE JOURNAL</span>
+            <span class="brand-issue">VOL. 01</span>
+        </a>
+
+        <nav class="masthead-nav">
+            <a th:href="@{/admin/members}" class="nav-link" style="color: var(--accent-red); font-weight: 500;">?ôÔ∏è ADMIN CONSOLE</a>
+            <button type="button" id="new-article-btn" class="nav-link primary">?çÔ∏è WRITE PIECE</button>
+
+            <span id="guest-nav">
+                <a th:href="@{/login}" class="nav-link">SIGN IN</a>
+                <a th:href="@{/signup}" class="nav-link">REGISTER</a>
+            </span>
+
+            <span id="user-nav" style="display: none;">
+                <button type="button" id="logout-btn" class="nav-link">LOGOUT</button>
+            </span>
+        </nav>
+    </div>
+</header>
+
+<!-- Issue Ticker (?†Î¨∏ Î™®Îìú???åÎäî ?®Í≤®Ïß? -->
+<div class="issue-ticker">
+    <div class="issue-ticker-inner">
+        <span>COLLECTED ESSAYS &amp; NOTES</span>
+        <span>CONTEMPORARY PERSPECTIVES</span>
+        <span>BROADSHEET PRINT EDITION</span>
+    </div>
+</div>
+
+<!-- Main Editorial Index Container -->
+<main class="editorial-container">
+
+    <!-- ==================================================================== -->
+    <!-- 1. BROADSHEET NEWSPAPER EDITION VIEW (?ïÌÜµ 6Î∂ÑÌï† 1Î©?ÏßÄÎ©?Ï°∞Ìåê Î∑?       -->
+    <!-- ==================================================================== -->
+    <section id="broadsheet-view" class="broadsheet-section" th:if="${not #lists.isEmpty(broadsheetArticles)}">
+        
+        <!-- Newspaper Header (?†Î¨∏ ?§Îçî & ?†Ìã∏Î¶¨Ìã∞ Î∞? -->
+        <div class="broadsheet-paper-header">
+            <div class="broadsheet-top-meta">
+                <div class="meta-left">
+                    <span id="paper-date-display">WEDNESDAY, OCT 7, 2026</span>
+                    <span class="meta-sep">¬∑</span>
+                    <span>THE BROADSHEET JOURNAL EDITION</span>
+                    <span class="meta-sep">¬∑</span>
+                    <span>PRICE: COMPLIMENTARY</span>
+                </div>
+                
+                <div class="meta-right">
+                    <a th:href="@{/admin/members}" class="newspaper-nav-link" style="color: var(--accent-red); font-weight: 600;">?ôÔ∏è ADMIN</a>
+                    <a th:href="@{/new-article}" class="newspaper-nav-link">?çÔ∏è WRITE</a>
+                    
+                    <span id="paper-guest-nav">
+                        <a th:href="@{/login}" class="newspaper-nav-link">SIGN IN</a>
+                    </span>
+                    <span id="paper-user-nav" style="display: none;">
+                        <button type="button" id="paper-logout-btn" class="newspaper-nav-link">LOGOUT</button>
+                    </span>
+
+                    <!-- ?¨Îùº?¥Îìú ?†Í? ?§ÏúÑÏπ?(?†Î¨∏ Î™®Îìú ON/OFF) -->
+                    <div class="newspaper-toggle-wrapper">
+                        <span class="toggle-text-label paper-toggle-label">?†Î¨∏ Î™®Îìú ON</span>
+                        <label class="switch-slide">
+                            <input type="checkbox" class="mode-switch-input" checked>
+                            <span class="slider-round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="broadsheet-title-box">
+                <h2 class="broadsheet-main-title">THE DAILY JOURNAL</h2>
+                <div class="broadsheet-subline">An Independent Chronicle of Contemporary Perspectives &amp; Inquiries</div>
+            </div>
+            <div class="broadsheet-rule-double"></div>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- ?ÅÎã® ÏßÄÎ©? [1??Î©îÏù∏ ?§Îìú?ºÏù∏] (2???àÎπÑ) + [3??& 4?? (1??        -->
+        <!-- ================================================================ -->
+        <div class="broadsheet-upper-row">
+            
+            <!-- [1?? MAIN HEADLINE] -->
+            <article class="broadsheet-lead-block" th:if="${#lists.size(broadsheetArticles) > 0}" th:with="item1=${broadsheetArticles[0]}">
+                <h1 class="lead-headline">
+                    <a th:href="@{/articles/{id}(id=${item1.id})}" th:text="${item1.title}">Î©îÏù∏ 1???§Îìú?ºÏù∏ Í∏∞ÏÇ¨ ?úÎ™©</a>
+                </h1>
+
+                <!-- Î≥∏Î¨∏ ?çÏä§??+ ?¨ÏßÑ Í∑∏Î¶¨??-->
+                <div th:class="${item1.hasImage} ? 'lead-layout with-photo' : 'lead-layout no-photo'">
+                    <div class="lead-text-body">
+                        <p class="lead-excerpt" th:text="${item1.getCleanExcerpt(350)}">1??Í∏∞ÏÇ¨ ?îÏïΩ</p>
+                        
+                        <div class="lead-footer-flow">
+                            <a th:if="${item1.isNeedsJumpLine(350)}" th:href="@{/articles/{id}(id=${item1.id})}" class="jump-line">
+                                &lt; [?îÎ≥¥Í∏? ?Ä?êÏÑú ?¥Ïñ¥Ïß???&gt;
+                            </a>
+                            <span th:unless="${item1.isNeedsJumpLine(350)}" class="end-mark">??/span>
+
+                            <div class="story-byline inline">
+                                <span th:text="|PIECE #${item1.id}|">PIECE #1</span>
+                                <span>¬∑</span>
+                                <span th:text="${#temporals.format(item1.createdAt, 'yyyy.MM.dd')}">2026.10.07</span>
+                                <span>¬∑</span>
+                                <span th:text="|${item1.views} READS|" style="color: var(--accent-red); font-weight: 500;">0 READS</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ?§Î•∏Ï™? Î≥¥ÎèÑ ?¨ÏßÑ -->
+                    <div class="lead-photo-body" th:if="${item1.hasImage}">
+                        <div class="newspaper-photo-frame">
+                            <img th:src="${item1.firstImageUrl}" th:alt="${item1.firstImageCaption}">
+                        </div>
+                        <div class="newspaper-caption" th:text="${item1.firstImageCaption}">[?¥Î?ÏßÄ] Î≥¥ÎèÑ?¨ÏßÑ</div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- ?∞Ï∏° Ïª¨Îüº: [3???úÎ∏å?§ÌÜ†Î¶?(?ÅÎã® ?ïÎ?)] & [4??Î∏åÎ¶¨???®Ïã† (?òÎã® ?†Îßâ)] -->
+            <div class="broadsheet-right-stack">
+                
+                <!-- [3?? SUB STORY] -->
+                <article class="sub-stack-item" th:if="${#lists.size(broadsheetArticles) > 2}" th:with="item3=${broadsheetArticles[2]}">
+                    <div>
+                        <h2 class="sub-headline">
+                            <a th:href="@{/articles/{id}(id=${item3.id})}" th:text="${item3.title}">3??Í∏∞ÏÇ¨ ?úÎ™©</a>
+                        </h2>
+                        <p class="sub-excerpt" th:text="${item3.getCleanExcerpt(240)}">3??Í∏∞ÏÇ¨ ?îÏïΩ</p>
+                    </div>
+                    
+                    <div class="column-footer-flow">
+                        <a th:if="${item3.isNeedsJumpLine(240)}" th:href="@{/articles/{id}(id=${item3.id})}" class="jump-line">
+                            &lt; [?îÎ≥¥Í∏? ?Ä?êÏÑú ?¥Ïñ¥Ïß???&gt;
+                        </a>
+                        <span th:unless="${item3.isNeedsJumpLine(240)}" class="end-mark">??/span>
+
+                        <div class="story-byline inline">
+                            <span th:text="|PIECE #${item3.id}|">PIECE #3</span>
+                            <span>¬∑</span>
+                            <span th:text="${#temporals.format(item3.createdAt, 'yyyy.MM.dd')}">2026.10.07</span>
+                            <span>¬∑</span>
+                            <span th:text="|${item3.views} READS|">0 READS</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- [4?? BRIEFING] (?ÅÎã® ?∞Ï∏° ?òÎã® ?†Îßâ ?®Ïã†) -->
+                <article class="briefing-stack-item" th:if="${#lists.size(broadsheetArticles) > 3}" th:with="item4=${broadsheetArticles[3]}">
+                    <div>
+                        <h3 class="briefing-headline">
+                            <a th:href="@{/articles/{id}(id=${item4.id})}" th:text="${item4.title}">4??Î∏åÎ¶¨??Í∏∞ÏÇ¨ ?úÎ™©</a>
+                        </h3>
+                        <p class="briefing-excerpt" th:text="${item4.getCleanExcerpt(95)}">4??Î∏åÎ¶¨???îÏïΩ</p>
+                    </div>
+                    
+                    <div class="column-footer-flow compact">
+                        <a th:if="${item4.isNeedsJumpLine(95)}" th:href="@{/articles/{id}(id=${item4.id})}" class="jump-line compact">
+                            &lt; [?îÎ≥¥Í∏? ??&gt;
+                        </a>
+                        <span th:unless="${item4.isNeedsJumpLine(95)}" class="end-mark">??/span>
+
+                        <div class="story-byline inline">
+                            <span th:text="|PIECE #${item4.id}|">PIECE #4</span>
+                            <span>¬∑</span>
+                            <span th:text="${#temporals.format(item4.createdAt, 'yyyy.MM.dd')}">2026.10.07</span>
+                            <span>¬∑</span>
+                            <span th:text="|${item4.views} READS|">0 READS</span>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+
+        <!-- ================================================================ -->
+        <!-- ?òÎã® ÏßÄÎ©? [2??Ï£ºÏöîÍ∏∞ÏÇ¨] | [5???òÎã®Ï§ëÏïô?®Ïã†] | [6???òÎã®?∞Ï∏°?®Ïã†] (3??Íµ¨Ìöç?? -->
+        <!-- ================================================================ -->
+        <div class="broadsheet-lower-row">
+            
+            <!-- [2?? 2ND LEAD] (??Î≤àÏß∏ Ï£ºÏöîÍ∏∞ÏÇ¨) -->
+            <article class="lower-col-lead" th:if="${#lists.size(broadsheetArticles) > 1}" th:with="item2=${broadsheetArticles[1]}">
+                <div>
+                    <h2 class="lead2-headline">
+                        <a th:href="@{/articles/{id}(id=${item2.id})}" th:text="${item2.title}">2??Í∏∞ÏÇ¨ ?úÎ™©</a>
+                    </h2>
+
+                    <div th:class="${item2.hasImage} ? 'lead2-layout with-photo' : 'lead2-layout no-photo'">
+                        <div class="lead2-text">
+                            <p class="lead2-excerpt" th:text="${item2.getCleanExcerpt(180)}">2??Í∏∞ÏÇ¨ ?îÏïΩ</p>
+                            <div class="column-footer-flow">
+                                <a th:if="${item2.isNeedsJumpLine(180)}" th:href="@{/articles/{id}(id=${item2.id})}" class="jump-line">
+                                    &lt; [?îÎ≥¥Í∏? ?Ä?êÏÑú ?¥Ïñ¥Ïß???&gt;
+                                </a>
+                                <span th:unless="${item2.isNeedsJumpLine(180)}" class="end-mark">??/span>
+                            </div>
+                        </div>
+                        <!-- ÎßàÏ?Îß?Ïª¨Îüº ?¨ÏßÑ -->
+                        <div class="lead2-photo" th:if="${item2.hasImage}">
+                            <div class="newspaper-photo-frame compact">
+                                <img th:src="${item2.firstImageUrl}" th:alt="${item2.firstImageCaption}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="story-byline">
+                    <span th:text="|PIECE #${item2.id}|">PIECE #2</span>
+                    <span>¬∑</span>
+                    <span th:text="${#temporals.format(item2.createdAt, 'yyyy.MM.dd')}">2026.10.07</span>
+                    <span>¬∑</span>
+                    <span th:text="|${item2.views} READS|">0 READS</span>
+                </div>
+            </article>
+
+            <!-- [5?? SHORT] (?òÎã® Ï§ëÏïô ?®Ïã†) -->
+            <article class="lower-col-short" th:if="${#lists.size(broadsheetArticles) > 4}" th:with="item5=${broadsheetArticles[4]}">
+                <div>
+                    <h3 class="short-headline">
+                        <a th:href="@{/articles/{id}(id=${item5.id})}" th:text="${item5.title}">5???®Ïã† Í∏∞ÏÇ¨ ?úÎ™©</a>
+                    </h3>
+                    <p class="short-excerpt" th:text="${item5.getCleanExcerpt(220)}">5???®Ïã† ?îÏïΩ</p>
+                    <div class="column-footer-flow compact">
+                        <a th:if="${item5.isNeedsJumpLine(220)}" th:href="@{/articles/{id}(id=${item5.id})}" class="jump-line compact">
+                            &lt; [?îÎ≥¥Í∏? ?Ä?êÏÑú ?¥Ïñ¥Ïß???&gt;
+                        </a>
+                        <span th:unless="${item5.isNeedsJumpLine(220)}" class="end-mark">??/span>
+                    </div>
+                </div>
+                <div class="story-byline">
+                    <span th:text="|PIECE #${item5.id}|">PIECE #5</span>
+                    <span>¬∑</span>
+                    <span th:text="${#temporals.format(item5.createdAt, 'yyyy.MM.dd')}">2026.10.07</span>
+                    <span>¬∑</span>
+                    <span th:text="|${item5.views} READS|">0 READS</span>
+                </div>
+            </article>
+
+            <!-- [6?? SNIPPET] (?òÎã® ?∞Ï∏° ?®Ïã†) -->
+            <article class="lower-col-snippet" th:if="${#lists.size(broadsheetArticles) > 5}" th:with="item6=${broadsheetArticles[5]}">
+                <div>
+                    <h4 class="snippet-headline">
+                        <a th:href="@{/articles/{id}(id=${item6.id})}" th:text="${item6.title}">6???†Îßâ Í∏∞ÏÇ¨ ?úÎ™©</a>
+                    </h4>
+                    <p class="snippet-excerpt" th:text="${item6.getCleanExcerpt(200)}">6???†Îßâ ?îÏïΩ</p>
+                    <div class="column-footer-flow compact">
+                        <a th:if="${item6.isNeedsJumpLine(200)}" th:href="@{/articles/{id}(id=${item6.id})}" class="jump-line compact">
+                            &lt; [?îÎ≥¥Í∏? ?Ä?êÏÑú ?¥Ïñ¥Ïß???&gt;
+                        </a>
+                        <span th:unless="${item6.isNeedsJumpLine(200)}" class="end-mark">??/span>
+                    </div>
+                </div>
+                <div class="story-byline">
+                    <span th:text="|PIECE #${item6.id}|">PIECE #6</span>
+                    <span>¬∑</span>
+                    <span th:text="${#temporals.format(item6.createdAt, 'yyyy.MM.dd')}">2026.10.07</span>
+                    <span>¬∑</span>
+                    <span th:text="|${item6.views} READS|">0 READS</span>
+                </div>
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- 2. STANDARD MAGAZINE FEED VIEW (?êÎûò?ÄÎ°? Î™©Î°ù???ÑÏπ¥?¥Î∏å ?ºÎìú)        -->
+    <!-- ==================================================================== -->
+    <section id="standard-feed" class="standard-feed" th:if="${not #lists.isEmpty(articles)}">
+        
+        <!-- Standard Mode Switcher Bar -->
+        <div class="mode-bar">
+            <div class="mode-bar-left">
+                <span th:text="|TOTAL ENTRIES: ${totalCount != null ? totalCount : #lists.size(articles)}|">TOTAL ENTRIES: 0</span>
+            </div>
+            
+            <div class="mode-bar-right">
+                <div class="newspaper-toggle-wrapper">
+                    <span class="toggle-text-label feed-toggle-label">?†Î¨∏ Î™®ÎìúÎ°?Î≥¥Í∏∞</span>
+                    <label class="switch-slide">
+                        <input type="checkbox" class="mode-switch-input">
+                        <span class="slider-round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <header class="index-header">
+            <h1 class="index-headline">Chronological Feed &amp;<br>Archive Index.</h1>
+            <div class="index-meta">
+                <div th:text="|TOTAL ISSUES: ${totalCount != null ? totalCount : #lists.size(articles)}|">TOTAL ISSUES: 0</div>
+                <div>ARCHIVE 2026</div>
+            </div>
+        </header>
+
+        <div class="article-feed" id="article-feed-container">
+            <article class="article-row" th:each="item : ${articles}">
+                <!-- Ï¢åÏ∏°: Í≥†Ïú† ?ùÎ≥Ñ??PK ID (#01, #09, #247, #250 ?ïÌÉú) -->
+                <div class="article-row-num" th:text="${item.id < 10 ? '#0' + item.id : '#' + item.id}">#01</div>
+                
+                <div class="article-row-body">
+                    <h2 class="article-row-title">
+                        <a th:href="@{/articles/{id}(id=${item.id})}" th:text="${item.title}" style="text-decoration:none; color:inherit;"></a>
+                    </h2>
+                    <p class="article-row-excerpt" th:text="${item.getCleanExcerpt(160)}"></p>
+                    <div>
+                        <a th:href="@{/articles/{id}(id=${item.id})}" class="read-link">READ PIECE <span>??/span></a>
+                    </div>
+                </div>
+
+                <!-- ?∞Ï∏°: Î∞úÌñâ?ºÎßå ?úÏãú -->
+                <div class="article-row-meta">
+                    <span th:text="${#temporals.format(item.createdAt, 'yyyy.MM.dd')}">2026.10.07</span>
+                </div>
+            </article>
+        </div>
+
+        <!-- Infinite Scroll Sentinel Loader -->
+        <div id="feed-infinite-sentinel" class="feed-infinite-sentinel" 
+             th:data-has-more="${hasNextPage != null ? hasNextPage : false}" 
+             data-next-page="1">
+            <div class="sentinel-loader" style="display: none;">
+                <span class="editorial-spinner"></span>
+                <span class="sentinel-text">ARCHIVE CHRONICLES LOADING...</span>
+            </div>
+            <div class="sentinel-end" th:style="${hasNextPage != null and hasNextPage ? 'display: none;' : 'display: flex;'}">
+                <span class="end-rule"></span>
+                <span class="end-text">??END OF THE ARCHIVE INDEX ??/span>
+                <span class="end-rule"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Empty State -->
+    <div class="editorial-empty" th:if="${#lists.isEmpty(articles)}">
+        <div class="empty-symbol">[ ??]</div>
+        <h2 class="empty-title">The Archive is Currently Quiet.</h2>
+        <p class="empty-desc">No publications have been archived yet. Be the first contributor to author a piece.</p>
+        <button type="button" id="empty-write-btn" class="btn-editorial primary">AUTHOR FIRST PIECE</button>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="editorial-footer">
+    <div class="editorial-footer-inner">
+        <span>¬© 2026 THE JOURNAL. ALL RIGHTS RESERVED.</span>
+        <span>BROADSHEET &amp; EDITORIAL ENGINE</span>
+    </div>
+</footer>
+
+<!-- Toast & Modal Components -->
+<div id="editorial-toast"></div>
+
+<div id="editorial-modal" class="editorial-modal-overlay">
+    <div class="editorial-modal-box">
+        <div class="modal-header-meta" id="modal-meta">NOTICE</div>
+        <div class="modal-message" id="modal-message">Confirm action?</div>
+        <div class="modal-actions">
+            <button type="button" class="btn-editorial" id="modal-cancel-btn">DISMISS</button>
+            <button type="button" class="btn-editorial primary" id="modal-confirm-btn">CONFIRM</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/common/modal.js}"></script>
+<script th:src="@{/js/common/api.js}"></script>
+<script th:src="@{/js/article/feed.js}"></script>
+</body>
+</html>

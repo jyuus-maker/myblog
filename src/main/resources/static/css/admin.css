@@ -1,0 +1,205 @@
+/* ==========================================================================
+   ADMIN CONSOLE / MEMBERS MANAGEMENT STYLES
+   ========================================================================== */
+
+.admin-container {
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+    flex: 1;
+}
+
+/* Stat KPI Cards Grid */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-hairline);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.stat-card-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+}
+
+.stat-card-value {
+    font-family: var(--font-serif);
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-primary);
+}
+
+.stat-card.accent {
+    border-top: 3px solid var(--accent-red);
+}
+
+/* Admin Table Section */
+.admin-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-hairline);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+}
+
+.admin-table-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-hairline);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FAF9F6;
+}
+
+.admin-table-title {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+
+.search-wrapper {
+    position: relative;
+    max-width: 260px;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.45rem 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    border: 1px solid var(--border-hairline);
+    background-color: #FFFFFF;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: var(--text-primary);
+}
+
+/* Data Table */
+.admin-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--border-hairline);
+    background-color: #F8F7F2;
+}
+
+.admin-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-hairline);
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #FCFBF7;
+}
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.badge-admin {
+    background-color: #121316;
+    color: #FFFFFF;
+}
+
+.badge-user {
+    background-color: #EAE8E1;
+    color: #5E6066;
+}
+
+.badge-social {
+    background-color: #E8F0FE;
+    color: #1A73E8;
+    border: 1px solid rgba(26, 115, 232, 0.2);
+}
+
+.badge-email {
+    background-color: #F1F3F4;
+    color: #5F6368;
+    border: 1px solid #DADCE0;
+}
+
+/* Select Control */
+.role-select {
+    padding: 0.35rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    border: 1px solid var(--border-hairline);
+    background-color: #FFFFFF;
+    color: var(--text-primary);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.role-select:focus {
+    border-color: var(--text-primary);
+}
+
+.btn-delete-member {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.35rem 0.75rem;
+    background: none;
+    border: 1px solid var(--border-hairline);
+    color: var(--text-muted);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s ease;
+}
+
+.btn-delete-member:hover {
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+    background-color: #FFF5F5;
+}
+
+.btn-delete-member:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: var(--border-hairline);
+    color: var(--text-muted);
+}
